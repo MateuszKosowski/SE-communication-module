@@ -1,0 +1,24 @@
+server:
+  port: 3000
+
+spring:
+  application:
+    name: communication
+  cloud:
+    gateway:
+      routes:
+        # Trasa do A
+        - id: service-a-route
+          uri: http://localhost:3001
+          predicates:
+            - Path=/api/a/**       # Jeśli ktoś wejdzie na localhost:3000/api/a/...
+          filters:
+            - StripPrefix=2        # utnij "/api/a" i wyślij resztę
+
+        # Trasa do B
+        - id: service-b-route
+          uri: http://localhost:3002
+          predicates:
+            - Path=/api/b/**       # Jeśli ktoś wejdzie na localhost:3000/api/b/...
+          filters:
+            - StripPrefix=2        # utnij "/api/b" i wyślij resztę
