@@ -47,9 +47,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                         System.out.println("--- [1] AuthFilter: Zalogowano (" + principal.getType() + "): " + principal.getId());
 
                         exchange.getAttributes().put("auth_principal", principal);
-                        return chain.filter(exchange).doFinally(signalType -> {
-                            System.out.println("--- [1] AuthFilter: Zakończono przetwarzanie (new auth) - Signal: " + signalType + ", Exchange: " + exchange.getRequest().getId());
-                        });
+                        return chain.filter(exchange);
                     })
                     .onErrorResume(error -> {
                         System.out.println("--- [1] AuthFilter: Obsługa błędu: " + error.getMessage());
