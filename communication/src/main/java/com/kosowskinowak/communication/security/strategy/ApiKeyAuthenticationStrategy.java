@@ -21,17 +21,21 @@ public class ApiKeyAuthenticationStrategy implements AuthenticationStrategy{
 
         String apiKey = exchange.getRequest().getHeaders().getFirst(API_KEY_HEADER);
 
-
         if (apiKey == null || apiKey.isEmpty()) {
-            System.out.println("ApiKey jest null lub pusty - zwracam Mono.empty()");
+            System.out.println("    [ApiKeyStrategy] ApiKey jest null lub pusty - zwracamy Mono.empty()");
             return Mono.empty();
         }
 
         return apiKeyRepository.findByApiKey(apiKey)
+                .doOnNext(details -> System.out.println("    [ApiKeyStrategy] Znaleziono klucz dla: " + details.getServiceId()))
                 .map(details -> new AuthenticationPrincipal(
                         details.getServiceId(),
                         PrincipalType.SERVICE,
                         details.getRoles()
-                ));
+                ))
+                .switchIfEmpty(Mono.defer(() -> {
+                    System.out.println("    [ApiKeyStrategy] Klucz NIE ZNALEZIONY w bazie: " + apiKey);
+                    return Mono.empty();
+                }));
     }
 }

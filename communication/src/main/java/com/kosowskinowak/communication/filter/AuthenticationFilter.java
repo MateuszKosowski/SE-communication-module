@@ -26,21 +26,35 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
 
-            System.out.println("--- [1] AuthenticationFilter: JWT lub ApiKey ---");
+
+
+            // Sprawdzamy czy ten obiekt exchange już przeszedł przez autentykację
+            if (exchange.getAttributes().containsKey("auth_principal")) {
+                System.out.println("--- [1] AuthFilter: Już zautentykowane - przepuszczam ---");
+                return chain.filter(exchange).doFinally(signalType -> {
+                    System.out.println("--- [1] AuthFilter: Zakończono przetwarzanie (cached auth) - Signal: " + signalType);
+                });
+            }
 
             return Flux.fromIterable(strategies) // Reaktywny strumień - kolejkuje strategie z listy do wykonania
                     .concatMap(strategy -> strategy.authenticate(exchange)) // Dla każdej strategii wykonaj metode z przekazanym obiektem żądania HTTP
                     .next() // Jeśli będzie pozytywna odpowiedź (inna niż Mono.empty) to zatrzymaj resztę LUB czekaj aż coś wreszcie będzie OK
+                    .switchIfEmpty(Mono.defer(() -> { // Blok porażki - MUSI być przed flatMap
+                        System.out.println("--- [1] AuthFilter: Brak pasującej strategii lub błąd danych -> 401 ---");
+                        return Mono.error(new RuntimeException("Authentication failed"));
+                    }))
                     .flatMap(principal -> { // Blok sukcesu wykonywany jak next() coś znalazło - to znalezione to principal
                         System.out.println("--- [1] AuthFilter: Zalogowano (" + principal.getType() + "): " + principal.getId());
 
                         exchange.getAttributes().put("auth_principal", principal);
-                        return chain.filter(exchange);
+                        return chain.filter(exchange).doFinally(signalType -> {
+                            System.out.println("--- [1] AuthFilter: Zakończono przetwarzanie (new auth) - Signal: " + signalType + ", Exchange: " + exchange.getRequest().getId());
+                        });
                     })
-                    .switchIfEmpty(Mono.defer(() -> { // Blok porażki
-                        System.out.println("--- [1] AuthFilter: Brak pasującej strategii lub błąd danych -> 401 ---");
+                    .onErrorResume(error -> {
+                        System.out.println("--- [1] AuthFilter: Obsługa błędu: " + error.getMessage());
                         return onError(exchange, HttpStatus.UNAUTHORIZED);
-                    }));
+                    });
         };
     }
 
