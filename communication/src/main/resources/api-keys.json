@@ -10,8 +10,8 @@
     "roles": ["internal_service", "inventory_manager"]
   },
   {
-    "key": "moj_klucz_frontendu",
-    "serviceId": "frontend_client",
+    "key": "moj_klucz_postman",
+    "serviceId": "postman_client",
     "roles": ["USER"]
   }
 ]
