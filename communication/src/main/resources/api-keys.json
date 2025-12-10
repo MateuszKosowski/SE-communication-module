@@ -1,0 +1,17 @@
+[
+  {
+    "key": "tajny_klucz_A_123",
+    "serviceId": "service-a",
+    "roles": ["internal_service", "order_creator"]
+  },
+  {
+    "key": "tajny_klucz_B_456",
+    "serviceId": "service-b",
+    "roles": ["internal_service", "inventory_manager"]
+  },
+  {
+    "key": "moj_klucz_frontendu",
+    "serviceId": "frontend_client",
+    "roles": ["USER"]
+  }
+]

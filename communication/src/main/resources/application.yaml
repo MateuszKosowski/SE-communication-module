@@ -6,6 +6,9 @@ spring:
     name: communication
   cloud:
     gateway:
+      default-filters:
+        - AuthenticationFilter
+        - AuthorizationFilter
       routes:
         # Trasa do A
         - id: service-a-route
