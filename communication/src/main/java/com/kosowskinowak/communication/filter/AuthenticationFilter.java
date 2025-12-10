@@ -1,6 +1,6 @@
 package com.kosowskinowak.communication.filter;
 
-import com.kosowskinowak.communication.filter.authentication.AuthenticationStrategy;
+import com.kosowskinowak.communication.security.strategy.AuthenticationStrategy;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;

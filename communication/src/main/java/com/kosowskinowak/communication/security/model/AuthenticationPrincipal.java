@@ -1,4 +1,4 @@
-package com.kosowskinowak.communication.filter.authentication;
+package com.kosowskinowak.communication.security.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

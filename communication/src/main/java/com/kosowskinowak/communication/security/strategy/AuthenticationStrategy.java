@@ -1,5 +1,6 @@
-package com.kosowskinowak.communication.filter.authentication;
+package com.kosowskinowak.communication.security.strategy;
 
+import com.kosowskinowak.communication.security.model.AuthenticationPrincipal;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 

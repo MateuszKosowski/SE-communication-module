@@ -1,7 +1,9 @@
-package com.kosowskinowak.communication.filter.authentication;
+package com.kosowskinowak.communication.security.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kosowskinowak.communication.security.model.ApiKeyDetails;
+import com.kosowskinowak.communication.security.model.ApiKeyEntryDTO;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;

@@ -1,5 +1,8 @@
-package com.kosowskinowak.communication.filter.authentication;
+package com.kosowskinowak.communication.security.strategy;
 
+import com.kosowskinowak.communication.security.model.AuthenticationPrincipal;
+import com.kosowskinowak.communication.security.model.PrincipalType;
+import com.kosowskinowak.communication.security.repository.ApiKeyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
